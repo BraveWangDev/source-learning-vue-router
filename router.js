@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import Router from './node_modules/vue-router';
+// import Router from './node_modules/vue-router';  // 官方的 vue-router
+import Router from './vue-router';  // 自己的 vue-router
 import Home from './views/Home';
 import Mine from './views/Mine';
 
