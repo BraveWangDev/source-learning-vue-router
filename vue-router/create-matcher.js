@@ -9,7 +9,9 @@ export default function createMatcher(routes) {
     }
 
     function match(location) {
+
     }
+    
     return {
         addRoutes, // 添加路由 
         match // 用于匹配路径
