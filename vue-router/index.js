@@ -29,7 +29,9 @@ class VueRouter {
     match(location) {
         return this.matcher.match(location);
     }
-
+    push(to) {
+        this.history.push(to); // 子类对应的push实现
+    }
     /**
      * 路由初始化方法，供 install 安装时调用
      * 初始化时，获取当前hash值进行跳转, 并设置监听器
@@ -49,8 +51,8 @@ class VueRouter {
         )
         // 每次路径变化时，都会调用此方法
         // 触发根实例 app 上响应式数据 _route 的更新
-        history.listen((route)=>{
-            app._route = route; 
+        history.listen((route) => {
+            app._route = route;
         });
     }
 }

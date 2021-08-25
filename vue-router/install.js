@@ -1,7 +1,8 @@
 // 用于存储插件安装时传入的 Vue 并向外抛出，提供给插件中的其他文件使用
 // export 的特点：如果导出的值发生变化，外部会取得变化后的新值；
 export let _Vue;
-
+import Link from './components/link';
+import View from './components/view';
 /**
  * 插件安装入口 install 逻辑
  * @param {*} Vue     Vue 的构造函数
@@ -38,14 +39,34 @@ export default function install(Vue, options) {
     }
   });
 
-  Vue.component('router-link', {
-    render: h => h('a', {}, '')
+  /**
+   *  在 Vue 原型上添加 $route 属性 -> current 对象
+   *  $route：包含了路由相关的属性
+   */
+  Object.defineProperty(Vue.prototype, '$route', {
+    get() {
+      // this指向当前实例；所有实例上都可以拿到_routerRoot；
+      // 所以，this._routerRoot._route 就是根实例上的 _router
+      // 即：处理根实例时，定义的响应式数据 -> this.current 对象
+      return this._routerRoot._route; // 包含：path、matched等路由相关属性
+    }
+  })
+  /**
+   *  在 Vue 原型上添加 $router 属性 -> router 实例
+   *  $router：包含了路由相关的方法
+   */
+  Object.defineProperty(Vue.prototype, '$router', {
+    get() {
+      // this._routerRoot._router 就是当前 router 实例；
+      // router 实例中，包含 matcher、push、go、repace 等方法；
+      return this._routerRoot._router;
+    }
   });
-  Vue.component('router-view', {
-    render: h => h('div', {}, '')
-  });
-  Vue.prototype.$route = {};
-  Vue.prototype.$router = {};
+
+  // 注册 Vue 全局组件
+  Vue.component('router-link', Link);
+  Vue.component('router-view', View);
+
 }
 
 

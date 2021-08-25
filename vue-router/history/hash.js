@@ -26,6 +26,13 @@ class HashHistory extends History {
     // 获取路径的 hash 值
     return getHash();
   }
+  push(location) {
+    // 跳转路径，并在跳转完成后更新 hash 值；
+    // transitionTo内部会查重：hash 值变化虽会再次跳转，但不会更新current属性;
+    this.transitionTo(location, () => {
+      window.location.hash = location;// 更新hash值
+    })
+  }
   setupListener() {
     // 当 hash 值变化时，拿到新的 hash 值，并进行匹配跳转
     window.addEventListener('hashchange', () => {
