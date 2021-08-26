@@ -17,3 +17,5 @@ vue serve main.js 或直接 vue serve
 ## v4.0,创建路由映射表
 ## v5.0,两种路由模式的设计及初始化
 ## v6.0,路由变化触发视图更新
+## v7.0,$route、$router 与 router-link 组件的实现
+## v8.0,router-view 组件的实现
