@@ -19,6 +19,22 @@ export function createRoute(record, location) {
 }
 
 /**
+ * 递归执行钩子函数
+ * @param {*} queue 钩子函数队列
+ * @param {*} iterator 执行钩子函数的迭代器
+ * @param {*} cb 全部执行完成后调用
+ */
+function runQueue(queue, iterator, cb) {
+  // 异步迭代
+  function step(index) { // 可以实现中间件逻辑
+    // 结束条件：队列全部执行完成，执行回调函数 cb 更新路由
+    if (index >= queue.length) return cb();
+    let hook = queue[index]; // 先执行第一个 将第二个hook执行的逻辑当做参数传入
+    iterator(hook, () => step(index + 1));
+  }
+  step(0);
+}
+/**
  * 路由基类
  */
 class History {
@@ -46,9 +62,23 @@ class History {
     if (location == this.current.path && route.matched.length == this.current.matched.length) { // 防止重复跳转
       return
     }
-    // 使用当前路由route更新current，并执行其他回调
-    this.updateRoute(route);
-    onComplete && onComplete();
+
+    let queue = [].concat(this.router.beforeHooks); // 获取到注册的回调方法 
+    const iterator = (hook, next) => {
+      hook(this.current, route, () => {
+        next();
+      })
+    }
+    runQueue(queue, iterator, () => {
+      // 将最后的两步骤放到回调中，确保执行顺序
+      // 1，使用当前路由route更新current，并执行其他回调
+      this.updateRoute(route);
+      // 根据路径加载不同的组件  this.router.matcher.match(location)  组件 
+      // 2，渲染组件
+      onComplete && onComplete();
+    })
+    // this.updateRoute(route);
+    // onComplete && onComplete();
   }
   listen(cb) {
     // 存储路由变化时的更新回调函数,即 app._route = route;
@@ -62,7 +92,7 @@ class History {
    */
   updateRoute(route) {
     // 每次路由切换时，都会更改current属性
-    this.current = route; 
+    this.current = route;
     // 调用保存的更新回调，触发app._route的响应式更新
     this.cb && this.cb(route);
   }

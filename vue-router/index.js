@@ -19,6 +19,8 @@ class VueRouter {
                 this.history = new BrowserHistory(this);
                 break;
         }
+        // 定义一个存放钩子函数的数组
+        this.beforeHooks = [];
     }
     /**
      * 根据路径匹配到路由映射表 matcher 中进行路由匹配
@@ -54,6 +56,10 @@ class VueRouter {
         history.listen((route) => {
             app._route = route;
         });
+    }
+    // 在router.beforeEach时，依次执行注册的钩子函数
+    beforeEach(fn){
+        this.beforeHooks.push(fn);
     }
 }
 VueRouter.install = install;

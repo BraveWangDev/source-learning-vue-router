@@ -19,3 +19,4 @@ vue serve main.js 或直接 vue serve
 ## v6.0,路由变化触发视图更新
 ## v7.0,$route、$router 与 router-link 组件的实现
 ## v8.0,router-view 组件的实现
+## v9.0,路由全局钩子的实现

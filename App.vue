@@ -5,7 +5,7 @@
         &nbsp;
         <router-link to="/mine">跳转至我的</router-link>
         <!-- 页面渲染结果 -->
-        <router-view></router-view>
+        <router-view  a="1" b="2"></router-view>
     </div>
 </template>
 
